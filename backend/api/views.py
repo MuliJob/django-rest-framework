@@ -12,7 +12,7 @@ def api_home(request, *args, **kwargs):
     """
     DRF API 
     """
-    data = request.data
+    # data = request.data
 
     # instance = Product.objects.all().order_by("?").first()
     # data = {}
