@@ -10,3 +10,16 @@ class Product(models.Model):
                                 decimal_places=2, default=99.99)
 
     objects = models.Manager()
+
+    @property
+    def sale_price(self):
+        """
+        Calculating Discount
+        """
+        return "%.2f" %(float(self.price) * 0.8)
+    
+    def get_discount(self):
+        """
+        Discount
+        """
+        return "155"
