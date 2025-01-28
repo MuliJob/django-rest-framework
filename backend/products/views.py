@@ -1,5 +1,5 @@
 """Product generic retrieve api view"""
-from rest_framework import generics
+from rest_framework import generics, mixins
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # from django.http import Http404
@@ -55,7 +55,7 @@ class ProductDestroyAPIView(generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         """Delete function"""
-        super().perform_destroy(instance)
+        self.perform_destroy(instance)
 
 product_destroy_view = ProductDestroyAPIView.as_view()
 
@@ -66,6 +66,45 @@ class ProductListAPIView(generics.ListAPIView):
     # lookup_field = 'pk'
 
 product_list_view = ProductListAPIView.as_view()
+
+class ProductMixinView(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView):
+    """Mixins and Generic API View"""
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = "pk"
+
+    def get(self, request, *args, **kwargs):
+        """Get Function"""
+        pk = kwargs.get("pk")
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """Create Function"""
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        content = serializer.validated_data.get('content') or None
+        if content is None:
+            content = "This is quite nice"
+        serializer.save(content=content)
+
+    def put(self, request, *args, **kwargs):
+        """Update Function"""
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        """Delete function"""
+        return self.destroy(request, *args, **kwargs)
+
+product_mixin_view = ProductMixinView.as_view()
 
 @api_view(["GET", "POST"])
 def product_alt_view(request, pk=None, *args, **kwargs):
