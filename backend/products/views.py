@@ -1,11 +1,11 @@
 """Product generic retrieve api view"""
-from rest_framework import authentication, generics, mixins, permissions
+from rest_framework import generics, mixins, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # from django.http import Http404
 from django.shortcuts import get_object_or_404
 
-from api.authentication import TokenAuthentication
+
 
 from .models import Product
 from.serializers import ProductSerializer
@@ -15,10 +15,6 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
     """Generic CreateAPIView"""
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [
-        authentication.SessionAuthentication,
-        TokenAuthentication
-    ]
     permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
     def perform_create(self, serializer):
@@ -37,6 +33,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     # lookup_field = 'pk'
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
 product_detail_view = ProductDetailAPIView.as_view()
 
@@ -45,6 +42,7 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
     def perform_update(self, serializer):
         """Update function"""
@@ -60,6 +58,7 @@ class ProductDestroyAPIView(generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
     def perform_destroy(self, instance):
         """Delete function"""
@@ -72,6 +71,7 @@ class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     # lookup_field = 'pk'
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
 product_list_view = ProductListAPIView.as_view()
 
@@ -86,6 +86,7 @@ class ProductMixinView(
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = "pk"
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission]
 
     def get(self, request, *args, **kwargs):
         """Get Function"""

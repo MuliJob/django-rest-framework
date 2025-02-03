@@ -1,7 +1,6 @@
 """Basic Client API"""
 from getpass import getpass
 import requests
-from gettext import gettext
 
 auth_endpoint = "http://localhost:8000/api/auth/"
 
